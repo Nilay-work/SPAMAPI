@@ -7,7 +7,7 @@ from byte import Encrypt_ID, encrypt_api  # Make sure this is correctly implemen
 app = Flask(__name__)
 
 # Define the list of regions
-regions = ["ind"]  # Add more like "sg", "br", etc., if needed
+regions = ["bd"]  # Add more like "sg", "br", etc., if needed
 
 # Load tokens for all regions
 def load_tokens():
