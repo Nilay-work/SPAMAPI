@@ -1,7 +1,7 @@
 import requests
 import json
 
-API_URL = "https://ffm-jwt-bot-info.vercel.app/token?uid={}&password={}"
+API_URL = "momin-jwt.vercel.app/token?uid={}&password={}"
 
 def generate_tokens(input_file):
     try:
