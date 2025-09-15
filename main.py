@@ -1,7 +1,7 @@
 import requests
 import json
 
-API_URL = "momin-jwt.vercel.app/token?uid={}&password={}"
+API_URL = "https://momin-jwt.vercel.app/token?uid={}&password={}"
 
 def generate_tokens(input_file):
     try:
@@ -40,12 +40,13 @@ def generate_tokens(input_file):
         except Exception as e:
             print(f"FAIL(error: {str(e)})")
     
-    # Save the results by region with proper pretty JSON
+    # Save results region-wise
     for region, tokens in result.items():
         if tokens:
             filename = f'token_{region.lower()}.json'
             with open(filename, 'w') as f:
-                json.dump(tokens, f, indent=4, separators=(',', ': '))  # <-- Pretty JSON
+                json.dump(tokens, f, indent=4, separators=(',', ': '))
             print(f"Saved {len(tokens)} tokens to {filename}")
 
+# Run the function
 generate_tokens("accounts.json")
