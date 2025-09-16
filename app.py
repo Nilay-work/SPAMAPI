@@ -6,29 +6,24 @@ from byte import Encrypt_ID, encrypt_api  # Make sure this is correctly implemen
 
 app = Flask(__name__)
 
-# Define the list of regions
-regions = ["ind"]  # Add more like "sg", "br", etc., if needed
-
-# Load tokens for all regions
+# Load tokens from bd.json
 def load_tokens():
-    all_tokens = []
-    for region in regions:
-        file_name = f"token_{region}.json"
-        try:
-            with open(file_name, "r") as file:
-                data = json.load(file)
-            tokens = [(region, item["token"]) for item in data]
-            all_tokens.extend(tokens)
-        except Exception as e:
-            print(f"Error loading tokens from {file_name}: {e}")
-    return all_tokens
+    try:
+        with open("bd.json", "r") as file:
+            data = json.load(file)
+        # bd.json format: [ { "token": "xxx" }, { "token": "yyy" } ]
+        return [item["token"] for item in data]
+    except Exception as e:
+        print(f"Error loading tokens from bd.json: {e}")
+        return []
 
 # Function to send one friend request
-def send_friend_request(uid, region, token, results):
+def send_friend_request(uid, token, results):
     encrypted_id = Encrypt_ID(uid)
     payload = f"08a7c4839f1e10{encrypted_id}1801"
     encrypted_payload = encrypt_api(payload)
 
+    region = "ind"  # Fixed region (can change if needed)
     url = f"https://client.{region}.freefiremobile.com/RequestAddingFriend"
     headers = {
         "Expect": "100-continue",
@@ -51,7 +46,7 @@ def send_friend_request(uid, region, token, results):
         else:
             results["failed"] += 1
     except Exception as e:
-        print(f"Error sending request for region {region} with token {token}: {e}")
+        print(f"Error sending request with token {token}: {e}")
         results["failed"] += 1
 
 # API endpoint
@@ -62,16 +57,16 @@ def send_requests():
     if not uid:
         return jsonify({"error": "uid parameter is required"}), 400
 
-    tokens_with_region = load_tokens()
-    if not tokens_with_region:
-        return jsonify({"error": "No tokens found in any token file"}), 500
+    tokens = load_tokens()
+    if not tokens:
+        return jsonify({"error": "No tokens found in bd.json"}), 500
 
     results = {"success": 0, "failed": 0}
     threads = []
 
     # Send using up to 100 tokens
-    for region, token in tokens_with_region[:100]:
-        thread = threading.Thread(target=send_friend_request, args=(uid, region, token, results))
+    for token in tokens[:100]:
+        thread = threading.Thread(target=send_friend_request, args=(uid, token, results))
         threads.append(thread)
         thread.start()
 
