@@ -9,7 +9,7 @@ app = Flask(__name__)
 # Load tokens from bd.json
 def load_tokens():
     try:
-        with open("bd.json", "r") as file:
+        with open("token_bd.json", "r") as file:
             data = json.load(file)
         # bd.json format: [ { "token": "xxx" }, { "token": "yyy" } ]
         return [item["token"] for item in data]
