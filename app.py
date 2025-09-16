@@ -24,7 +24,7 @@ def send_friend_request(uid, token, results):
     encrypted_payload = encrypt_api(payload)
 
     region = "ind"  # Fixed region (can change if needed)
-    url = f"https://client.{region}.freefiremobile.com/RequestAddingFriend"
+    url = f"https://client.ind.freefiremobile.com/RequestAddingFriend"
     headers = {
         "Expect": "100-continue",
         "Authorization": f"Bearer {token}",
@@ -34,7 +34,7 @@ def send_friend_request(uid, token, results):
         "Content-Type": "application/x-www-form-urlencoded",
         "Content-Length": "16",
         "User-Agent": "Dalvik/2.1.0 (Linux; U; Android 9; SM-N975F Build/PI)",
-        "Host": f"client.{region}.freefiremobile.com",
+        "Host": f"client.ind.freefiremobile.com",
         "Connection": "close",
         "Accept-Encoding": "gzip, deflate, br"
     }
